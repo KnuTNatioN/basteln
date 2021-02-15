@@ -8,7 +8,7 @@ serA = Servo("BOARD33")
 serB = Servo("BOARD12")
 
 position = float(-1)
-vecc = True
+forward = True
 
 def argv_handel():
     dict = {
@@ -65,21 +65,21 @@ def beckon():#dictionary: He beckoned to me, as if he wanted to speak to me.
 
 def steps():
     global position
-    global vecc
+    global forward
     position = round(position, 3)
     sleep(0.01)
     position = round(position, 3)
     if position < -0.999:
-        vecc = True
+        forward = True
         sleep(1)
-        print('back')
+        print('tremble forward')
         sleep(1)
     elif position > 0.999:
-        vecc = False
+        forward = False
         sleep(1)
-        print('forward')
+        print('tremble back')
         sleep(1)
-    if vecc == True:
+    if forward == True:
         position = position + 0.1
     else:
         position = position - 0.1
@@ -90,6 +90,7 @@ def last():
     serA.close()
     serB.close()
     print("\nProgram ended")
+
 
 def helper():
     print('usage: servo.py [options]')
