@@ -63,7 +63,7 @@ def beckon():#dictionary: He beckoned to me, as if he wanted to speak to me.
         position = -1
 
 
-def steps():
+def steps():#makes automatic steps
     global position
     global forward
     position = round(position, 3)
