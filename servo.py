@@ -45,7 +45,7 @@ def loop():
     argv_handel()
 
 
-def manual():
+def manual():#semi manual drive (input number between 1 and 100)
     global position
     print("Position: ", position*100, "%")
     position = (float(input("input between 1..&..100 : ")) / 50 - 1)
