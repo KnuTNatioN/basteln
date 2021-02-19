@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 
+# neuer stuff zum testen von gut... man bin ich schlecht
+
 from gpiozero import Servo
 from time import sleep
 import sys
