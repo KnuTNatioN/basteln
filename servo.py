@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-# neuer stuff zum testen von gut... man bin ich schlecht
-
 from gpiozero import Servo
 from time import sleep
 import sys
@@ -10,7 +8,8 @@ serA = Servo("BOARD33")
 serB = Servo("BOARD12")
 
 position = float(-1)
-forward = True
+vecc = True
+
 
 def argv_handel():
     dict = {
@@ -25,7 +24,7 @@ def argv_handel():
         '--help' : helper,
     }
     
-    dict.get(sys.argv[1],default)()
+    dict.get(sys.argv[1], helper)()
     
 
 def initial():#start
@@ -47,7 +46,7 @@ def loop():
     argv_handel()
 
 
-def manual():#semi manual drive (input number between 1 and 100)
+def manual():
     global position
     print("Position: ", position*100, "%")
     position = (float(input("input between 1..&..100 : ")) / 50 - 1)
@@ -65,23 +64,23 @@ def beckon():#dictionary: He beckoned to me, as if he wanted to speak to me.
         position = -1
 
 
-def steps():#makes automatic steps
+def steps():
     global position
-    global forward
+    global vecc
     position = round(position, 3)
     sleep(0.01)
     position = round(position, 3)
     if position < -0.999:
-        forward = True
+        vecc = True
         sleep(1)
-        print('tremble forward')
+        print('back')
         sleep(1)
     elif position > 0.999:
-        forward = False
+        vecc = False
         sleep(1)
-        print('tremble back')
+        print('forward')
         sleep(1)
-    if forward == True:
+    if vecc == True:
         position = position + 0.1
     else:
         position = position - 0.1
@@ -94,25 +93,33 @@ def last():
     print("\nProgram ended")
 
 
+class hell_per(Exception):
+    pass
+
+
 def helper():
     print('usage: servo.py [options]')
     print('-b, --beckon         hard -100% then 100% (beckon means waving)')
     print('-m, --manual         give value between 0=-100% and 100=+100%')
     print('-s, --steps          maken 10% steps between -100% and 100%')
     print('-h,                  ...display this help')
+    #break
+    raise hell_per('ok')
 
 
 def main():
     initial()
-    if len(sys.argv) < 2:
-        helper()
-    else:
-        while True:
-            try:
-                loop()
-            except KeyboardInterrupt:
-                print("\nStrg+C = STOP PROGRAM")
-                break
+    #if len(sys.argv) < 2:
+    #    helper()
+    #else:
+    while True:
+        try:
+            loop()
+        except hell_per:
+            break
+        except KeyboardInterrupt:
+            print("\nStrg+C = STOP PROGRAM")
+            break
     last()
 
 
