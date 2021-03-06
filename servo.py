@@ -102,7 +102,7 @@ def helper():
     print('-b, --beckon         hard -100% then 100% (beckon means waving)')
     print('-m, --manual         give value between 0=-100% and 100=+100%')
     print('-s, --steps          maken 10% steps between -100% and 100%')
-    print('-h,                  ...display this help')
+    print('-h,                  ...display this help ')
     #break
     raise hell_per('ok')
 
