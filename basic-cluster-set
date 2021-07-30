@@ -1,0 +1,84 @@
+#!/bin/bash
+
+starter()
+{
+    echo -e "\e[41m-----------------------------\e[0m"
+    echo -e "\e[41m-\e[0m no arguments, need root.. \e[41m-\e[0m"
+    echo -e "\e[41m-----------------------------\e[0m"
+    echo -e "\e[41m-\e[0m Install Script v0.1       \e[41m-\e[0m"
+    echo -e "\e[41m-\e[0m Bash aliases              \e[41m-\e[0m"
+    echo -e "\e[41m-\e[0m dhcpcd static ip_address  \e[41m-\e[0m"
+    echo -e "\e[41m-\e[0m hostname to node #nr      \e[41m-\e[0m"
+    echo -e "\e[41m-----------------------------\e[0m"
+}
+
+
+bashalias() {
+# get bash aliases
+echo -e "\e[101m...\e[0m \e[38;5;82m hole nun die aliases\e[0m"
+wget https://gist.githubusercontent.com/KnuTNatioN/d52e83b281f049812d76ea925cbea5d3/raw/b221ec3ea456169e1cdb9d359ee8e676c25bc26b/myalias
+cat myalias >> /home/pi/.bash_aliases
+rm myalias
+chown pi:pi .bash_aliases
+echo -e "\e[101m...\e[0m \e[38;5;82m bash aliases eingefügt BRA.\e[0m"
+}
+
+
+dhspcd_thingi() {
+    echo -e "\e[101m...\e[0m \e[38;5;82m suche mir die dhcpcd konfuguration zusammen..\e[0m"
+    mv /etc/dhcpcd.conf /etc/dhcpcd.conf.savecopy #alte sichern
+    echo -e "\e[101m...\e[0m \e[38;5;82m dhcpcd.conf als savecopy gesichert!\e[0m"
+    wget https://gist.githubusercontent.com/KnuTNatioN/d52e83b281f049812d76ea925cbea5d3/raw/b221ec3ea456169e1cdb9d359ee8e676c25bc26b/dhcpcd.conf
+    mv dhcpcd.conf /etc/dhcpcd.conf #neue Datei verschieben
+    echo "# Static IP Address" >> /etc/dhcpcd.conf
+    echo "interface wlan0" >> /etc/dhcpcd.conf
+    echo "static ip_address=192.168.0.1$nodeNR/24" >> /etc/dhcpcd.conf
+    echo "static domain_name_servers=192.168.0.1" >> /etc/dhcpcd.conf
+    echo "static routers=192.168.0.1" >> /etc/dhcpcd.conf
+
+    echo -e "\e[101m...\e[0m \e[38;5;82m neue DHCPCD.CONF gegespeichert, digga!\e[0m"
+
+}
+
+
+changehostname() {
+    newHname=$"node$nodeNR"
+    echo "$newHname" > /etc/hostname
+    echo -e "\e[101m...\e[0m \e[38;5;82m der neue Hostname ist: \e[101m$newHname\e[0m"
+}
+
+
+mainn() {
+if [ $(whoami) = 'root' ]; then
+    starter
+    echo -e "\e[101m...\e[0m \e[38;5;82m KnuT installs shit from Guthub-GIST, NOW\e[0m"
+    echo -e "\e[101m...\e[0m \e[38;5;82m Welcher Node ist das? 1-99:?\e[0m"
+    read nodeNR
+    nodeNR="$(printf "%.2d " $nodeNR)"
+    if [$nodeNR -gt 99]
+    then
+        echo -e "\e[101m...\e[0m \e[38;5;82m yooo, zu groß, bau dein shit um\e[0m"
+        break
+        exit 1
+    else
+        echo -e "\e[101m...\e[0m \e[38;5;82m Okay, neue NodeNR ist: \e[101m$nodeNR\e[0m!"
+
+        bashalias   #aliases downloaden und hinzufuegen
+
+        dhspcd_thingi
+
+        changehostname
+
+        echo -e "\e[101m...\e[0m \e[38;5;82m ich glaube ich bin durch...\e[0m"
+        echo -e "\e[101m...\e[0m \e[38;5;82m DU MUSST REBOOTEN ... \e[0m"
+        echo -e "\e[101m...\e[0m \e[38;5;82m tschoeoeoe\e[0m"
+        # reboot or restart all dienste
+    fi
+else
+	echo -e "\e[101m...\e[0m \e[38;5;82m Ich wollte, aber ich bin kein root \e[0m"
+    echo -e "\e[101m...\e[0m \e[38;5;82m root rechte sind für den hostname und die static IP \e[0m"
+    echo -e "\e[101m...\e[0m \e[38;5;82m naja, danke =P \e[0m"
+fi
+}
+
+mainn
