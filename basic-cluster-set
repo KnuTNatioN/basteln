@@ -42,10 +42,33 @@ dhspcd_thingi() {
 
 
 changehostname() {
-    newHname=$"node$nodeNR"
-    echo "$newHname" > /etc/hostname
+    echo $"node$nodeNR" > /etc/hostname
     echo -e "\e[101m...\e[0m \e[38;5;82m der neue Hostname ist: \e[101m$newHname\e[0m"
+
+    echo '' > /etc/hosts
+    echo "127.0.0.1       localhost" >> /etc/hosts
+    echo "::1             localhost ip6-localhost ip6-loopback" >> /etc/hosts
+    echo "ff02::1         ip6-allnodes" >> /etc/hosts
+    echo "ff02::2         ip6-allrouters" >> /etc/hosts
+    echo "" >> /etc/hosts
+    echo "127.0.0.1    packages.microsoft.com" >> /etc/hosts
+    echo "127.0.0.1    node$nodeNR" >> /etc/hosts
 }
+
+
+# change SSID and PW from router to raspi3 Ndde0
+
+
+# generate host keys NEW
+
+
+# generate RSA keys
+#ssh-keygen -t rsa
+
+# put RSA keys to Main Node (raspi3 Node0)
+#scp from:file to:file
+
+
 
 
 mainn() {
