@@ -30,6 +30,8 @@ Either one implements a runner-variable that is set one down with each completed
 while(variable > 0):
     s.th()
 ```
+>There are certainly more elegant solutions to this problem, but I can't think of them right now.
+
 To disable threading, the following lines should be left out or uncommented commented out code lines 
 
 Comment out (write a # at the beginning of the line):
@@ -45,8 +47,6 @@ Comment (remove # at the beginning of the line):
 - Line 51
 - Line 59
 - Line 60
-
-There are certainly more elegant solutions to this problem, but I can't think of them right now.
 
 ---
 ### servo.py
