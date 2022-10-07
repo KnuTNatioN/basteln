@@ -20,6 +20,33 @@ SECURITY CONSIDERATIONS
        via /proc. Use the keyword PROMPT and input any passwords via standard
        input instead.
 ```
+---
+
+### Threading example
+
+When this script ends, all containing threads are terminated, regardless of whether the tasks have been processed.
+Either one implements a runner-variable that is set one down with each completed task. At the end there is then something like
+```python3
+while(variable > 0):
+    s.th()
+```
+To disable threading, the following lines should be left out or uncommented commented out code lines 
+
+Comment out (write a # at the beginning of the line):
+- Line 27
+- Line 30
+- Line 50
+- Line 53
+
+Comment (remove # at the beginning of the line):
+- Line 28
+- Line 37
+- Line 38
+- Line 51
+- Line 59
+- Line 60
+
+There are certainly more elegant solutions to this problem, but I can't think of them right now.
 
 ---
 ### servo.py
