@@ -1,8 +1,8 @@
 # basteln (tinkern)
 
-### tkskript.py
+## tkskript.py
 
-#### Remove the password for ALL files in given path (still needs a password)
+### Remove the password for ALL files in given path (still needs a password)
 
 - need "pdftk" installed (just tested with Ubuntu 22.04 -> "sudo apt install pdftk")
 - non recursive (ignores directory's in path)
@@ -22,7 +22,7 @@ SECURITY CONSIDERATIONS
 ```
 ---
 
-### Threading example
+## Threading example
 
 When this script ends, all containing threads are terminated, regardless of whether the tasks have been processed.
 Either one implements a runner-variable that is set one down with each completed task. At the end there is then something like
@@ -49,7 +49,7 @@ Comment (remove # at the beginning of the line):
 - Line 60
 
 ---
-### servo.py
+## servo.py
 
 Eine kleines Programm um mit Servomotoren am Raspberry umzugehen.
 
@@ -60,3 +60,26 @@ Ich hab mich auch ein bisschen mit einem Argument Handler auseinander gesetzt.
 
 
 Viel Glück =)
+
+---
+## eyes.py
+
+Eine mini python Spielerei.
+Es soll ein einfaches ASCII Gesicht anzeigen, das sich umschaut.
+
+Aktuell ist das ding noch zu hibbelig.
+
+### Eingaben zur Laufzeit:
+(Enter nicht vergessen *nur der letzte eingegebene Buchstabe wird gewertet*)
+- ? = mini Hilfe anzeigen
+- q oder Q oder 0 oder e oder E Beendet das Programm
+
+Leider noch ein klein bissche buggy und etwas hacky
+
+#### mögliche verbesserungen:
+- statt überall print, einen Puffer einsetzen. So könnte man auch mehrzeilig Arbeiten
+- mehr Eingaben zur Laufzeit
+- mehr Gesichter
+- mehr Zeichen möglich, UTF-8 bzw Ascii ist recht begrenzt (keine Ahnung ob Python3 das kann)
+
+
