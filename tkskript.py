@@ -1,78 +1,35 @@
 #!/usr/bin/env python3
 
-#knutnation
-"""
-pdf password remover
-Remove the password for ALL files in given path
-- need "pdftk" installed (just tested with Ubuntu 22.04 -> "sudo apt install pdftk")
-- non recursive (ignores directory's in path)
-- creates a Folder in given path (without/)
-- threading for a but parallel workload to be a bit faster ^^
-- uses threading, time, subprocess, os and sys (i know... a lot of stuff, improve it =P)
-- pipes all warnings to >/dev/null 2>&1
-"""
-
-import threading as th
-import time
-import subprocess
 import os
-
 import sys
+import subprocess
 
-GGlen = 4201337
+def unlock_pdfs(folder_path, password):
+    # Überprüfen, ob der Ordner existiert
+    if not os.path.exists(folder_path):
+        print(f"Der Ordner '{folder_path}' existiert nicht.")
+        return
 
-class major():
-    def __init__(self, path, pw):
-        self.path = path
-        self.pw = pw
-        mkdir = "mkdir " + self.path + "without/" + " >/dev/null 2>&1"
-        try:
-            mkdir = subprocess.check_output(mkdir, shell=True)
-        except:
-            pass
-        print("\n[\"" + self.path + "\"] get password removed")
+    # Durchsuchen Sie den Ordner nach PDF-Dateien
+    for root, _, files in os.walk(folder_path):
+        for filename in files:
+            if filename.endswith(".pdf"):
+                pdf_file = os.path.join(root, filename)
+                output_dir = os.path.join(root, "without")
+                os.makedirs(output_dir, exist_ok=True)
+                output_file = os.path.join(output_dir, filename)
 
-    def makeAlist(self):
-        global GGlen
-        self.filelist = os.listdir(self.path)
-        GGlen = len(self.filelist)
-
-    def tk(self):
-        global GGlen
-        self.tker = []
-        for file in self.filelist:
-            if(os.path.isdir(self.path + file)):
-                GGlen = GGlen - 1
-                continue
-            tkk = tk(file, self.path, self.pw)
-            self.tker.append(tkk)
-            self.tker[-1].start()
-
-class tk( th.Thread ):
-    def __init__(self, file, path, pw):
-        th.Thread.__init__(self)
-        self.file = file
-        self.oldpath = path + file
-        self.newpath = path + "ohne/" + file
-        self.pw = pw
-
-    def run(self):
-        global GGlen
-        befehl = "pdftk " + self.oldpath + " input_pw " + self.pw + " output " + self.newpath + " >/dev/null 2>&1"
-        #print(befehl)
-        self.tkk = subprocess.check_output(befehl, shell=True)
-        GGlen = GGlen - 1
-            #pdftk crypt01__lec.pdf input_pw Euklid18 output test.pdf
+                # Verwenden Sie pdftk, um das Passwort zu entfernen
+                try:
+                    subprocess.run(["pdftk", pdf_file, "input_pw", password, "output", output_file])
+                    print(f"Passwort für '{pdf_file}' entfernt und als '{output_file}' gespeichert.")
+                except Exception as e:
+                    print(f"Fehler beim Entfernen des Passworts für '{pdf_file}': {str(e)}")
 
 if __name__ == "__main__":
-    if(sys.argv[1] == "-h" or sys.argv[1] == "--help"):
-        print("./tkskript.py path password")
-        print("or")
-        print("python3 tkskript.py path password")
+    if len(sys.argv) != 3:
+        print("Verwendung: python3 unlock_pdfs.py <Ordnerpfad> <Passwort>")
     else:
-        macher = major(sys.argv[1], sys.argv[2])
-        macher.makeAlist()
-        macher.tk()
-        while (GGlen > 0):#wait for all hreads to finish
-            time.sleep(0.2)
-        print("Finished.")
+        folder_path = sys.argv[1]
+        password = sys.argv[2]
+        unlock_pdfs(folder_path, password)
